@@ -1,4 +1,4 @@
-package rolling.redisspringdatademo;
+package rolling.redisspringdatademo.service;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package rolling.redisspringdatademo;
+package rolling.redisspringdatademo.config;
 
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
