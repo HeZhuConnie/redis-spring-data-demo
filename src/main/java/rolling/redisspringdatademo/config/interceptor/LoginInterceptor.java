@@ -15,8 +15,14 @@ import static rolling.redisspringdatademo.utils.RedisConstants.LOGIN_USER_KEY;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
-    @Autowired
+//    LoginInterceptor这个类不是Spring帮我们创建的，所以内部不能用autowire注解引入任何类，引不到
+//    @Autowired
+
     private StringRedisTemplate stringRedisTemplate;
+
+    public LoginInterceptor(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

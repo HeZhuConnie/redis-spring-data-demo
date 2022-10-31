@@ -19,8 +19,11 @@ import static rolling.redisspringdatademo.utils.RedisConstants.LOGIN_USER_TTL;
 
 public class RefreshTokenInterceptor implements HandlerInterceptor {
 
-    @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    public RefreshTokenInterceptor(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
