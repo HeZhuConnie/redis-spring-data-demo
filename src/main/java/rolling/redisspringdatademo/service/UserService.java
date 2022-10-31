@@ -11,6 +11,7 @@ import rolling.redisspringdatademo.repository.UserPo;
 import rolling.redisspringdatademo.repository.UserRepository;
 import rolling.redisspringdatademo.utils.RandomUtils;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -41,7 +42,7 @@ public class UserService {
         return Response.ok();
     }
 
-    public Response login(LoginFormDto loginFormDto) {
+    public Response login(LoginFormDto loginFormDto, HttpSession session) {
         if (loginFormDto.getPhone().length() != 11) return Response.fail("phone number is invalid");
 
         String verifyCode = stringRedisTemplate.opsForValue().get(LOGIN_PHONE_KEY + loginFormDto.getPhone());
@@ -73,6 +74,10 @@ public class UserService {
 
         stringRedisTemplate.opsForHash().putAll(LOGIN_USER_KEY + token, userMap);
         stringRedisTemplate.expire(LOGIN_USER_KEY + token, LOGIN_USER_TTL, TimeUnit.HOURS);
+
+        User u = new User();
+        BeanUtil.copyProperties(user, u);
+        session.setAttribute("user", u);
 
         return Response.ok(token);
     }
