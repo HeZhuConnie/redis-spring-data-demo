@@ -14,6 +14,8 @@ public class MvcConfig implements WebMvcConfigurer {
                         "/user/verify-code",
                         "/shop-type/**",
                         "/user/login"
-                );
+                ).order(1);
+
+        registry.addInterceptor(new RefreshTokenInterceptor()).addPathPatterns("**").order(0);
     }
 }
