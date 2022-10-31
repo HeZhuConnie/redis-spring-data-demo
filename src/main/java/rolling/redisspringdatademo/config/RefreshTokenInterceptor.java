@@ -19,6 +19,8 @@ import static rolling.redisspringdatademo.utils.RedisConstants.LOGIN_USER_TTL;
 
 public class RefreshTokenInterceptor implements HandlerInterceptor {
 
+    //RefreshTokenInterceptor这个类不是Spring帮我们创建的，所以内部不能用autowire注解引入任何类，引不到
+    //@Autowired
     private StringRedisTemplate stringRedisTemplate;
 
     public RefreshTokenInterceptor(StringRedisTemplate stringRedisTemplate) {
