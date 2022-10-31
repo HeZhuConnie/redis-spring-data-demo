@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import rolling.redisspringdatademo.controller.dto.LoginFormDto;
-import rolling.redisspringdatademo.service.User;
+import rolling.redisspringdatademo.controller.dto.UserDto;
 import rolling.redisspringdatademo.service.UserService;
 import rolling.redisspringdatademo.utils.UserHolder;
 
@@ -33,7 +33,7 @@ public class UserController {
 
     @GetMapping("/me")
     public Response me() {
-        User user = UserHolder.getUser();
+        UserDto user = UserHolder.getUser();
         return Response.ok(user);
     }
 }

@@ -1,7 +1,7 @@
 package rolling.redisspringdatademo.config.interceptor;
 
 import org.springframework.web.servlet.HandlerInterceptor;
-import rolling.redisspringdatademo.service.User;
+import rolling.redisspringdatademo.controller.dto.UserDto;
 import rolling.redisspringdatademo.utils.UserHolder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,9 +25,8 @@ public class LoginInterceptor implements HandlerInterceptor {
             return false;
         }
 
-
         // 5。存在，保存用户信息到ThreadLocal，放行
-        UserHolder.saveUser((User) user);
+        UserHolder.saveUser((UserDto) user);
 
         return true;
     }

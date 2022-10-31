@@ -1,13 +1,13 @@
 package rolling.redisspringdatademo.utils;
 
-import rolling.redisspringdatademo.service.User;
+import rolling.redisspringdatademo.controller.dto.UserDto;
 
 public class UserHolder {
-    private static final ThreadLocal<User> tl = new ThreadLocal<>();
+    private static final ThreadLocal<UserDto> tl = new ThreadLocal<>();
 
-    public static void saveUser(User userId) { tl.set(userId); }
+    public static void saveUser(UserDto userId) { tl.set(userId); }
 
-    public static User getUser() { return tl.get(); }
+    public static UserDto getUser() { return tl.get(); }
 
     public static void removeUser() { tl.remove(); }
 }

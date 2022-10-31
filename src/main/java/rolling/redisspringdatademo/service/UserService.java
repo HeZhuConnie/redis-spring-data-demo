@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import rolling.redisspringdatademo.controller.Response;
 import rolling.redisspringdatademo.controller.dto.LoginFormDto;
+import rolling.redisspringdatademo.controller.dto.UserDto;
 import rolling.redisspringdatademo.repository.UserPo;
 import rolling.redisspringdatademo.repository.UserRepository;
 import rolling.redisspringdatademo.utils.RandomUtils;
@@ -75,9 +76,7 @@ public class UserService {
         stringRedisTemplate.opsForHash().putAll(LOGIN_USER_KEY + token, userMap);
         stringRedisTemplate.expire(LOGIN_USER_KEY + token, LOGIN_USER_TTL, TimeUnit.HOURS);
 
-        User u = new User();
-        BeanUtil.copyProperties(user, u);
-        session.setAttribute("user", u);
+        session.setAttribute("user", BeanUtil.copyProperties(user, UserDto.class));
 
         return Response.ok(token);
     }
