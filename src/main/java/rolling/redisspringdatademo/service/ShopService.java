@@ -27,7 +27,7 @@ public class ShopService {
         String shop = stringRedisTemplate.opsForValue().get(key);
 
         if (StrUtil.isNotBlank(shop)) {
-            return Response.ok(shop);
+            return Response.ok(JSONUtil.toBean(shop, ShopPo.class));
         }
 
         Optional<ShopPo> shopFromDb = shopRepository.findById(id);
