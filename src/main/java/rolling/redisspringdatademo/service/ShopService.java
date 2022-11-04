@@ -1,6 +1,7 @@
 package rolling.redisspringdatademo.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,21 +30,27 @@ public class ShopService {
     private StringRedisTemplate stringRedisTemplate;
 
     public Response getShop(String id) {
+        // 缓存穿透
+        ShopPo shop = queryWithPassThrough(id);
+        return Response.ok(shop);
+    }
+
+    public ShopPo queryWithPassThrough(String id) {
         String key = CACHE_SHOP_KEY + id;
         String shop = stringRedisTemplate.opsForValue().get(key);
 
         if (StrUtil.isNotBlank(shop)) {
-            return Response.ok(JSONUtil.toBean(shop, ShopPo.class));
+            return JSONUtil.toBean(shop, ShopPo.class);
         }
 
         Optional<ShopPo> shopFromDb = shopRepository.findById(id);
 
         if (shopFromDb.isEmpty()) {
             stringRedisTemplate.opsForValue().set(key, "", CACHE_SHOP_NULL_TTL, TimeUnit.MINUTES);
-            return Response.fail("没有这个店铺");
+            return null;
         }
         stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(shopFromDb.get()), CACHE_SHOP_TTL, TimeUnit.MINUTES);
-        return Response.ok(shopFromDb.get());
+        return shopFromDb.get();
     }
 
     public void create(Shop shop) {
@@ -59,5 +66,15 @@ public class ShopService {
         stringRedisTemplate.delete(CACHE_SHOP_KEY + shop.getId());
 
         return Response.ok();
+    }
+
+    private boolean tryLock(String key) {
+        Boolean flag = stringRedisTemplate.opsForValue().setIfAbsent(key, "1", 10, TimeUnit.SECONDS);
+
+        return BooleanUtil.isTrue(flag);
+    }
+
+    private void unlock(String key) {
+        stringRedisTemplate.opsForValue().getAndDelete(key);
     }
 }
