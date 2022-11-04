@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import rolling.redisspringdatademo.config.interceptor.LoginInterceptor;
+import rolling.redisspringdatademo.config.interceptor.RefreshTokenInterceptor;
 
 import javax.annotation.Resource;
 

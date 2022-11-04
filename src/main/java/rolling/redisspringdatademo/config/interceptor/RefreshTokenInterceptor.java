@@ -1,4 +1,4 @@
-package rolling.redisspringdatademo.config;
+package rolling.redisspringdatademo.config.interceptor;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
