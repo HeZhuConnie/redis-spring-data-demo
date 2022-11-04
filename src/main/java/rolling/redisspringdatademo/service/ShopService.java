@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static rolling.redisspringdatademo.utils.RedisConstants.CACHE_SHOP_KEY;
+import static rolling.redisspringdatademo.utils.RedisConstants.CACHE_SHOP_NULL_TTL;
 import static rolling.redisspringdatademo.utils.RedisConstants.CACHE_SHOP_TTL;
 
 @Service
@@ -38,7 +39,7 @@ public class ShopService {
         Optional<ShopPo> shopFromDb = shopRepository.findById(id);
 
         if (shopFromDb.isEmpty()) {
-            stringRedisTemplate.opsForValue().set(key, "");
+            stringRedisTemplate.opsForValue().set(key, "", CACHE_SHOP_NULL_TTL, TimeUnit.MINUTES);
             return Response.ok();
         }
         stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(shopFromDb.get()), CACHE_SHOP_TTL, TimeUnit.MINUTES);
