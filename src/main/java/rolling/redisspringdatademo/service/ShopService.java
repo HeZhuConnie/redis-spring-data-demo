@@ -40,7 +40,7 @@ public class ShopService {
 
         if (shopFromDb.isEmpty()) {
             stringRedisTemplate.opsForValue().set(key, "", CACHE_SHOP_NULL_TTL, TimeUnit.MINUTES);
-            return Response.ok();
+            return Response.fail("没有这个店铺");
         }
         stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(shopFromDb.get()), CACHE_SHOP_TTL, TimeUnit.MINUTES);
         return Response.ok(shopFromDb.get());
