@@ -19,7 +19,8 @@ public class MvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/user/verify-code",
                         "/shop-type/**",
-                        "/user/login"
+                        "/user/login",
+                        "/shop/**"
                 ).order(1);
 
         registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate)).addPathPatterns("/**").order(0);

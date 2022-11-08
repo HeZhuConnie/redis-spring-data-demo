@@ -58,7 +58,7 @@ public class ShopService {
             }
 
             shopFromDb = shopRepository.findById(id);
-            Thread.sleep(200); // 用于测试
+             Thread.sleep(200); // 用于测试
 
             if (shopFromDb.isEmpty()) {
                 stringRedisTemplate.opsForValue().set(key, "", CACHE_SHOP_NULL_TTL, TimeUnit.MINUTES);
