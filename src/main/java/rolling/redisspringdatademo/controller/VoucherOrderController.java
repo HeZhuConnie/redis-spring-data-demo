@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import rolling.redisspringdatademo.service.VoucherOrderService;
+import rolling.redisspringdatademo.utils.UserHolder;
 
 @RestController
 @RequestMapping("/voucher-order")
@@ -16,7 +17,7 @@ public class VoucherOrderController {
 
     @PostMapping("/seckill/{id}")
     public Response seckillVoucher(@PathVariable("id") Long voucherId) {
-        return Response.ok();
+        return service.seckillVoucher(voucherId);
     }
 
 }
