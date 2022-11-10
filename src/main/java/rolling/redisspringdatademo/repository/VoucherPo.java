@@ -27,9 +27,9 @@ public class VoucherPo {
 
     private Long actual_value; // unit: 分 = 0.01元
 
-    private Integer type;
+    private Integer type = 0;
 
-    private Integer status;
+    private Integer status = 1;
 
     @Transient
     private Integer stock;
