@@ -40,7 +40,7 @@ public class UserService {
 
         stringRedisTemplate.opsForValue().set(LOGIN_PHONE_KEY + phone, verifyCode, 15, TimeUnit.MINUTES);
 
-        return Response.ok();
+        return Response.ok(verifyCode);
     }
 
     public Response login(LoginFormDto loginFormDto, HttpSession session) {

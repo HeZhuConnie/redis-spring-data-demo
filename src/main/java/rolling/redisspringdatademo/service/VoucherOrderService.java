@@ -41,6 +41,13 @@ public class VoucherOrderService {
             return Response.fail("库存不足");
         }
 
+        // 每人只能下一单
+        String userId = UserHolder.getUser().getId();
+        if (voucherOrderRepository.findFirstByUserId(userId) != null)
+        {
+            return Response.fail("每人只能下一单");
+        };
+
         // 减少库存
         try {
             seckillVoucherRepository.reduceStock(voucherId);
@@ -52,7 +59,6 @@ public class VoucherOrderService {
         VoucherOrderPo voucherOrderPo = new VoucherOrderPo();
         voucherOrderPo.setId(redisWorker.getAutoId("order"));
         voucherOrderPo.setVoucherId(voucherId);
-        String userId = UserHolder.getUser().getId();
         voucherOrderPo.setUserId(userId);
 
         // 返回订单id

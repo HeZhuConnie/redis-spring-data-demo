@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VoucherOrderRepository extends JpaRepository<VoucherOrderPo, Long> {
 
+    VoucherOrderPo findFirstByUserId(String userId);
 }
