@@ -32,6 +32,8 @@ dependencies {
 	implementation 'org.flywaydb:flyway-mysql'
 	// hutool
 	implementation 'cn.hutool:hutool-all:5.7.17'
+	// aop
+	implementation 'org.aspectj:aspectjweaver'
 	// test
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

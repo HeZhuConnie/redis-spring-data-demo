@@ -1,5 +1,6 @@
 package rolling.redisspringdatademo.service;
 
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rolling.redisspringdatademo.controller.Response;
@@ -42,7 +43,9 @@ public class VoucherOrderService {
 
         String userId = UserHolder.getUser().getId();
         synchronized(userId.toString().intern()) { // long转string是给new了一个string对象出来，所以要转换为纯文本比较
-            return createVoucherOrder(voucherId);
+            // 获取代理对象，因为Transactional注解对this.createVoucherOrder是不起作用的
+            VoucherOrderService proxy = (VoucherOrderService) AopContext.currentProxy();
+            return proxy.createVoucherOrder(voucherId);
         }
     }
 
