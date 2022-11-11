@@ -40,11 +40,14 @@ public class VoucherOrderService {
             return Response.fail("库存不足");
         }
 
-        return createVoucherOrder(voucherId);
+        String userId = UserHolder.getUser().getId();
+        synchronized(userId.toString().intern()) { // long转string是给new了一个string对象出来，所以要转换为纯文本比较
+            return createVoucherOrder(voucherId);
+        }
     }
 
     @Transactional
-    public synchronized Response createVoucherOrder(Long voucherId) {
+    public Response createVoucherOrder(Long voucherId) {
         // 每人只能下一单
         String userId = UserHolder.getUser().getId();
         if (voucherOrderRepository.findFirstByUserId(userId) != null)
