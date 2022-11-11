@@ -24,7 +24,6 @@ public class VoucherOrderService {
     @Autowired
     private RedisWorker redisWorker;
 
-    @Transactional
     public Response seckillVoucher(Long voucherId) {
         // 查询优惠券
         Optional<SeckillVoucherPo> seckillVoucherPo = seckillVoucherRepository.findById(voucherId);
@@ -41,6 +40,11 @@ public class VoucherOrderService {
             return Response.fail("库存不足");
         }
 
+        return createVoucherOrder(voucherId);
+    }
+
+    @Transactional
+    public synchronized Response createVoucherOrder(Long voucherId) {
         // 每人只能下一单
         String userId = UserHolder.getUser().getId();
         if (voucherOrderRepository.findFirstByUserId(userId) != null)
