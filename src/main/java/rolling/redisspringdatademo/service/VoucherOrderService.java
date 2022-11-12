@@ -2,12 +2,14 @@ package rolling.redisspringdatademo.service;
 
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import rolling.redisspringdatademo.controller.Response;
 import rolling.redisspringdatademo.repository.SeckillVoucherPo;
 import rolling.redisspringdatademo.repository.SeckillVoucherRepository;
 import rolling.redisspringdatademo.repository.VoucherOrderPo;
 import rolling.redisspringdatademo.repository.VoucherOrderRepository;
+import rolling.redisspringdatademo.utils.RedisLock;
 import rolling.redisspringdatademo.utils.RedisWorker;
 import rolling.redisspringdatademo.utils.UserHolder;
 
@@ -24,6 +26,9 @@ public class VoucherOrderService {
     private VoucherOrderRepository voucherOrderRepository;
     @Autowired
     private RedisWorker redisWorker;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     public Response seckillVoucher(Long voucherId) {
         // 查询优惠券
@@ -42,10 +47,22 @@ public class VoucherOrderService {
         }
 
         String userId = UserHolder.getUser().getId();
-        synchronized(userId.toString().intern()) { // long转string是给new了一个string对象出来，所以要转换为纯文本比较
+
+        String lockName = "order:" + userId;
+        RedisLock redisLock = new RedisLock(lockName, stringRedisTemplate);
+
+        boolean isLock = redisLock.tryLock(5);
+
+        if (!isLock) {
+            return Response.fail("每人只能下一单");
+        }
+
+        try {
             // 获取代理对象，因为Transactional注解对this.createVoucherOrder是不起作用的
             VoucherOrderService proxy = (VoucherOrderService) AopContext.currentProxy();
             return proxy.createVoucherOrder(voucherId);
+        } finally {
+            redisLock.unlock();
         }
     }
 
