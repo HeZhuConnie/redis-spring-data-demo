@@ -1,8 +1,8 @@
 package rolling.redisspringdatademo.config;
 
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -28,6 +28,14 @@ public class RedisConfig{
         redisTemplate.setHashValueSerializer(jsonSerializer);
 
         return redisTemplate;
+    }
+
+    @Bean
+    public RedissonClient redissonClient() {
+        Config config = new Config();
+        config.useSingleServer().setAddress("redis://localhost:6379");
+
+        return Redisson.create(config);
     }
 
 }

@@ -1,5 +1,7 @@
 package rolling.redisspringdatademo.service;
 
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -13,6 +15,7 @@ import rolling.redisspringdatademo.utils.RedisLock;
 import rolling.redisspringdatademo.utils.RedisWorker;
 import rolling.redisspringdatademo.utils.UserHolder;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -29,6 +32,9 @@ public class VoucherOrderService {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private RedissonClient redissonClient;
 
     public Response seckillVoucher(Long voucherId) {
         // 查询优惠券
@@ -48,10 +54,11 @@ public class VoucherOrderService {
 
         String userId = UserHolder.getUser().getId();
 
-        String lockName = "order:" + userId;
-        RedisLock redisLock = new RedisLock(lockName, stringRedisTemplate);
+        String lockName = "lock:order:" + userId;
+        //  RedisLock redisLock = new RedisLock(lockName, stringRedisTemplate);
+        RLock redisLock = redissonClient.getLock(lockName);
 
-        boolean isLock = redisLock.tryLock(5);
+        boolean isLock = redisLock.tryLock();
 
         if (!isLock) {
             return Response.fail("每人只能下一单");
